@@ -1,0 +1,54 @@
+OPTLEVEL=-O3
+CUDA_PATH=/usr/local/cuda
+CUDA_LIB_PATH=/usr/local/cuda/lib64
+
+# TODO fix this hardcoded path
+PARBOIL_ROOT =$(HOME)/gpu_research_benchmarks/Parboil/
+
+# gcc (default)
+CC = gcc
+PLATFORM_CFLAGS = 
+  
+CXX = g++
+PLATFORM_CXXFLAGS = 
+  
+LINKER = g++
+PLATFORM_LDFLAGS = -lm -lpthread
+
+
+# Paths
+CUDAHOME=/usr/local/cuda
+
+# Programs
+#CUDACC=$(CUDAHOME)/bin/nvcc
+CUDALINK=$(CUDAHOME)/bin/nvcc
+
+# TODO fix this hardcoded path
+CUDACC= /home/aq10/llvm-build/bin/clang++
+# Flags
+PLATFORM_CUDACFLAGS= $(OPTLEVEL)
+PLATFORM_CUDALDFLAGS=-lm -lpthread
+
+# CUDA specific
+LANG_CFLAGS=-I$(PARBOIL_ROOT)/common/include -I$(CUDA_PATH)/include
+LANG_CXXFLAGS=$(LANG_CFLAGS)
+LANG_LDFLAGS=-L$(CUDA_LIB_PATH)
+
+LANG_CUDACFLAGS=$(LANG_CFLAGS)
+
+
+REGCAP=
+BLOCKPARAM=
+RALEVEL=
+
+CFLAGS=$(BLOCKPARAM) $(APP_CFLAGS) $(LANG_CFLAGS) $(PLATFORM_CFLAGS) $(OPTLEVEL)
+CXXFLAGS=$(BLOCKPARAM) $(APP_CXXFLAGS) $(LANG_CXXFLAGS) $(PLATFORM_CXXFLAGS)
+
+
+# TODO fix this hardcoded path
+PASS = $HOME/RegAllocControl/build/RegAllocControl/libRegAllocControlPass.so
+#CUDACFLAGS= $(BLOCKPARAM) $(LANG_CUDACFLAGS) $(PLATFORM_CUDACFLAGS) $(APP_CUDACFLAGS) -arch sm_35 --ptxas-options $(OPTLEVEL) $(REGCAP)
+CUDACFLAGS = $(LANG_CUDACFLAGS) $(PLATFORM_CUDACFLAGS) --cuda-gpu-arch=sm_35 $(OPTLEVEL) -Xclang -load -Xclang $(PASS) -mllvm -reg_control=$(RALEVEL) -Xcuda-ptxas -v -mllvm -debug-pass=Arguments
+
+CUDALDFLAGS=$(LANG_LDFLAGS) $(PLATFORM_CUDALDFLAGS) -lcuda -lcudart $(APP_CUDALDFLAGS) 
+

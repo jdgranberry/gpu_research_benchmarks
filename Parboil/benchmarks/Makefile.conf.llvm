@@ -46,7 +46,7 @@ CXXFLAGS=$(BLOCKPARAM) $(APP_CXXFLAGS) $(LANG_CXXFLAGS) $(PLATFORM_CXXFLAGS)
 
 
 # TODO fix this hardcoded path
-PASS = $HOME/RegAllocControl/build/RegAllocControl/libRegAllocControlPass.so
+PASS = $(HOME)/RegAllocControl/build/RegAllocControl/libRegAllocControlPass.so
 #CUDACFLAGS= $(BLOCKPARAM) $(LANG_CUDACFLAGS) $(PLATFORM_CUDACFLAGS) $(APP_CUDACFLAGS) -arch sm_35 --ptxas-options $(OPTLEVEL) $(REGCAP)
 CUDACFLAGS = $(LANG_CUDACFLAGS) $(PLATFORM_CUDACFLAGS) --cuda-gpu-arch=sm_35 $(OPTLEVEL) -Xclang -load -Xclang $(PASS) -mllvm -reg_control=$(RALEVEL) -Xcuda-ptxas -v -mllvm -debug-pass=Arguments
 
